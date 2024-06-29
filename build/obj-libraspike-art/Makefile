@@ -6,7 +6,7 @@ SRCS := raspike_protocol.c raspike_com.c raspike_color.c raspike_forcesensor.c r
 	raspike_ultrasonicsensor.c raspike_hub.c
 
 INCLUDES += -I$(SRC_DIR)
-
+OPT=-g -O2
 CLEAN_TARGETS=$(LIB_DIR)/$(LIB_NAME) 
 
 include ../Makefile.common

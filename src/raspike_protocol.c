@@ -9,6 +9,9 @@
 
 #define printf(...) do { printf(__VA_ARGS__);fflush(stdout);}while(0)
 
+//#define CHECK_FREQUENCY 1
+
+
 static RPProtocolSpikeStatus *fgStatus;
 static RPComDescriptor *fgDesc;
 
@@ -218,18 +221,6 @@ int raspike_prot_receive(void)
     return -1;
   }
 
-# if 0  
-  if ( !did_handshake ) {
-    while(1) {
-      len = raspike_com_receive(fgDesc,buf,1);
-      if ( buf[0] == RP_CMD_INIT ) {
-	did_handshake = 1;
-	pthread_cond_signal(&fgSendCond);
-	break;
-      }
-    }
-  }
-#endif  
   // Wait Start command
   while(1) {
     len = raspike_com_receive(fgDesc,buf,1);
@@ -257,9 +248,10 @@ int raspike_prot_receive(void)
   if ( size > 0 ) {
     len = raspike_com_receive(fgDesc,buf,size);
   }
-  
+
   if ( len <= 0 ) return -1;
 
+#ifdef CHECK_FREQUENCY    
   static struct timespec prev = {0};
   static int count = 0;
 
@@ -283,7 +275,7 @@ int raspike_prot_receive(void)
     prev=cur;
     count=0;
   }
-  
+#endif  
   
   return process_command(port,cmd,buf,size);
 
