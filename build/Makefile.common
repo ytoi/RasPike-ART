@@ -1,0 +1,33 @@
+
+BASE_DIR?=../..
+OBJ_DIR?=.
+INC_DIR?=$(BASE_DIR)/include
+LIB_DIR?=$(BASE_DIR)/lib
+LIB_NAME?=libraspike-art.a
+WORKSPACE_DIR?=$(BASE_DIR)/sample
+
+LIBPYBRICKS_DIR=$(BASE_DIR)/external/libpybricks
+
+SRC_DIR?=$(WORKSPACE_DIR)/$(APP_NAME)
+OBJS := $(SRCS:.c=.o)
+
+OPT?=-g -O0
+
+INCLUDES := -I $(BASE_DIR)/drivers/include \
+	-I $(BASE_DIR)/drivers/include/spike/pup \
+	-I $(BASE_DIR)/drivers/include/spike/hub \
+	-I $(BASE_DIR)/drivers \
+	-I $(LIBPYBRICKS_DIR)/lib/pbio/include/pbio \
+	-I $(LIBPYBRICKS_DIR)/lib/pbio/include \
+	-I $(INC_DIR)
+
+clean:
+	rm -f *~ *.o *.so *.a $(APP_NAME) $(CLEAN_TARGETS)
+
+
+
+$(OBJ_DIR)/%.o:$(SRC_DIR)/%.c
+	gcc $(OPT) -c $(INCLUDES) $(CFLAGS) -o $@ $<
+
+$(APP_NAME):$(addprefix $(OBJ_DIR)/,$(OBJS)) $(LIB_DIR)/$(LIB_NAME)
+	gcc $(OPT) -o $@ $^ -pthread
