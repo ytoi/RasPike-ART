@@ -12,7 +12,7 @@ CLEAN_TARGETS=$(LIB_DIR)/$(LIB_NAME)
 include ../Makefile.common
 
 ../../lib/libraspike-art.a:$(addprefix $(OBJ_DIR)/,$(OBJS))
-	ar rcs $@ $^
+	ar rcs  $@ $^
 
 
 

@@ -119,8 +119,8 @@ int raspike_prot_init(RPComDescriptor *desc,RPProtocolSpikeStatus *status)
 
 
   // Hand Shake
-  char cmd = RP_CMD_INIT;
-  char buf[1];
+  unsigned char cmd = RP_CMD_INIT;
+  unsigned char buf[1];
   raspike_com_send(fgDesc,&cmd,1);
 
   // skip until INIT
@@ -141,6 +141,7 @@ int raspike_prot_shutdown(void)
 {
   stop_communication = 0;
   raspike_com_close(fgDesc);
+  return 0;
 }
 
 
@@ -151,7 +152,7 @@ RPProtocolSpikeStatus *raspike_prot_get_saved_status(void)
 
 
 
-int raspike_prot_send(RasPikePort port, unsigned char cmdid, char *buf, int size)
+int raspike_prot_send(RasPikePort port, unsigned char cmdid, const unsigned char *buf, int size)
 {
   unsigned char cmd[4];
   cmd[0] = RP_CMD_START;
@@ -214,7 +215,7 @@ int raspike_prot_receive(void)
 {
   
   
-  char buf[RP_PROTOCOL_BUFMAX] = {0};
+  unsigned char buf[RP_PROTOCOL_BUFMAX] = {0};
   int len;
 
   if ( stop_communication ) {
@@ -281,7 +282,7 @@ int raspike_prot_receive(void)
 
 }
 
-int raspike_wait_ack(RasPikePort port, char cmd) {
+int raspike_wait_ack(RasPikePort port, unsigned char cmd) {
   ENSURE_VALID_PORT(port);
   
   int32_t ret;

@@ -15,14 +15,14 @@
 #include "raspike_com.h"
 #define printf(...) do { printf(__VA_ARGS__);fflush(stdout);}while(0)
 
-typedef int (*RPComSendFunc)(RPComDescriptor *desc, const char *buf, int size);
-typedef int (*RPComReceiveFunc)(RPComDescriptor *desc, char *buf, int size);
+typedef int (*RPComSendFunc)(RPComDescriptor *desc, const unsigned char *buf, int size);
+typedef int (*RPComReceiveFunc)(RPComDescriptor *desc, unsigned char *buf, int size);
 typedef int (*RPComCloseFunc)(RPComDescriptor *desc);
 typedef int (*RPComFlushFunc)(RPComDescriptor *desc);
 
 struct _RPComDescriptor {
   int type;
-  void *desc;
+  int desc;
   RPComSendFunc send;
   RPComReceiveFunc receive;
   RPComCloseFunc close;
@@ -45,7 +45,7 @@ static int get_usb_fd(RPComDescriptor *desc)
   exit(-1);
 }
 
-static int rp_usb_send(RPComDescriptor *desc, const char *buf, int size)
+static int rp_usb_send(RPComDescriptor *desc, const unsigned char *buf, int size)
 {
   int fd = get_usb_fd(desc);
 
@@ -62,7 +62,7 @@ static int rp_usb_send(RPComDescriptor *desc, const char *buf, int size)
   return len;
 }
     
-static int rp_usb_receive(RPComDescriptor *desc, char *buf, int size)
+static int rp_usb_receive(RPComDescriptor *desc, unsigned char *buf, int size)
 {
   int fd = get_usb_fd(desc);
 
@@ -121,7 +121,7 @@ RPComDescriptor *raspike_open_usb_communication(const char *device_name)
   memset(desc,0,sizeof(RPComDescriptor));
 
   desc->type = RP_COM_TYPE_USB;
-  desc->desc = (void*)fd;
+  desc->desc = fd;
   desc->send = rp_usb_send;
   desc->receive = rp_usb_receive;
   desc->close = rp_usb_close;
@@ -131,7 +131,7 @@ RPComDescriptor *raspike_open_usb_communication(const char *device_name)
 }
   
 
-void dump_buf(const char *buf, int size)
+void dump_buf(const unsigned char *buf, int size)
 {
   if ( buf && size>0 ) {
     int i;
@@ -144,7 +144,7 @@ void dump_buf(const char *buf, int size)
   }
 }
 
-void dump_buf2(int wait_size,const char *buf, int size)
+void dump_buf2(int wait_size,const unsigned char *buf, int size)
 {
   if ( buf && size>0 ) {
     int i;
@@ -159,21 +159,22 @@ void dump_buf2(int wait_size,const char *buf, int size)
 }
 
 
-int raspike_com_send(RPComDescriptor *desc, const char *buf, int size)
+int raspike_com_send(RPComDescriptor *desc, const unsigned char *buf, int size)
 {
   //  dump_buf(buf,size); 
   int ret =  desc->send(desc,buf,size);
   if ( ret < 0 ) {
     printf("com_send error err=%d\n",errno);
   }
+  return ret;
 }
 
 
-int raspike_com_receive(RPComDescriptor *desc, char *buf, int size)
+int raspike_com_receive(RPComDescriptor *desc, unsigned char *buf, int size)
 {
   int num = 0;
   int len = 0;
-  char *p = buf;
+  unsigned char *p = buf;
   
   while (num != size) {
     len = desc->receive(desc,buf+num,size-num);

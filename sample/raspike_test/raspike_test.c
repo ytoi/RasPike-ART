@@ -129,12 +129,17 @@ void colorsensor_test(void)
 
 }
 
-int main(void)
+int main(int argc,char const *argv[])
 {
-  RPComDescriptor *desc = raspike_open_usb_communication(RASPIKE_COM_NAME);
+  const char *p = RASPIKE_COM_NAME;
+  if ( argc > 1 ) {
+    p = argv[1];
+  }
+
+  RPComDescriptor *desc = raspike_open_usb_communication(p);
 
   if ( !desc ) {
-    printf("Cannot Open desc\n");
+    printf("Cannot Open desc name=%s\n",p);
     exit(-1);
   }
 
