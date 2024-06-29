@@ -175,7 +175,7 @@
 
 #define RASPIKE_PORT_DATA_SIZE (12)
 
-typedef unsigned char RasPikePort;
+
 
 typedef struct {
     RasPikePort port;
@@ -185,7 +185,7 @@ typedef struct {
 } RPProtocolPortStatus;
 
 
-typedef struct {
+typedef struct _rp_protocol_spike_status {
     uint16_t voltage;
     uint16_t current;
     float acceleration[3];
@@ -193,6 +193,8 @@ typedef struct {
     uint32_t button;
     RPProtocolPortStatus ports[6];
 } RPProtocolSpikeStatus;
+
+extern RPProtocolSpikeStatus *raspike_prot_get_saved_status(void);
 
 #define RP_PROTOCOL_BUFMAX (256)
 

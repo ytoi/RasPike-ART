@@ -1,17 +1,17 @@
 #ifndef _RASPIKE_PROTOCOL_API_H_
 #define _RASPIKE_PROTOCOL_API_H_
 
-#include "raspike_protocol_com.h"
 #include "raspike_com.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif  
 
-  extern int raspike_prot_init(RPComDescriptor *desc,RPProtocolSpikeStatus *status);
+  typedef unsigned char RasPikePort;
+  extern int raspike_prot_init(RPComDescriptor *desc);
   extern int raspike_prot_shutdown(void);
 
-  extern RPProtocolSpikeStatus *raspike_prot_get_saved_status(void);
+  
   
   extern int raspike_prot_lock_status(void);
   extern int raspike_prot_unlock_status(void);
