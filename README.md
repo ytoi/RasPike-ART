@@ -20,10 +20,9 @@ RasPikeで使用していたシリアルケーブルは不要です。
 
 # 環境
 
-:::note alert
-現在、動作確認はDebian version: 11 (Bullseye)32bit Legacyでのみ行っています。そのほかでも動くかもしれませんが、まだ試していません。
-RasPikeが動作した環境であればそのまま使えます。
-:::
+
+*現在、動作確認はDebian version: 11 (Bullseye)32bit Legacyでのみ行っています。そのほかでも動くかもしれませんが、まだ試していません。RasPikeが動作した環境であればそのまま使えます。*
+
 
 ## 最初の設定
 
@@ -156,7 +155,8 @@ RasPIke-ARTのAPIはincludeの下にあります。
 
 ### 通信用のAPI
 
-```c:raspike_com.h
+raspike_com.h
+```
  RPComDescriptor *raspike_open_usb_communication(const char *device_name);
 ```
 
@@ -170,7 +170,8 @@ ls /dev/ttyACM*
 
 ### RasPike-ARTのAPI
 
-```c:raspike_protocol_api.h
+raspike_protocol_api.h
+```
   extern int raspike_prot_init(RPComDescriptor *desc);
   extern int raspike_prot_receive(void);
   extern int raspike_prot_shutdown(void);
