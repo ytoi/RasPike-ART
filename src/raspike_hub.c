@@ -32,6 +32,7 @@ pbio_error_t hub_button_is_pressed(hub_button_t *pressed)
 {
   RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();  
   *pressed = status->button;
+  return PBIO_SUCCESS;
 }
 
 
@@ -56,7 +57,7 @@ pbio_error_t hub_display_off(void)
 pbio_error_t hub_display_pixel(uint8_t row, uint8_t column, uint8_t brightness)
 {
   // TODO: error check
-  char data[3];
+  unsigned char data[3];
   data[0] = row;
   data[1] = column;
   data[2] = brightness;
@@ -68,29 +69,29 @@ pbio_error_t hub_display_pixel(uint8_t row, uint8_t column, uint8_t brightness)
 
 pbio_error_t hub_display_image(uint8_t* image)
 {
-  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_DISP_IMG,(char*)image,25);
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_DISP_IMG,(unsigned char*)image,25);
   return PBIO_SUCCESS;
 }
 
 
 pbio_error_t hub_display_number(const int8_t num)
 {
-  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_DISP_NUM,(char*)&num,1);
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_DISP_NUM,(unsigned char*)&num,1);
   return PBIO_SUCCESS;
 }
 
 pbio_error_t hub_display_char(const char c)
 {
-  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_DISP_CHR,(char*)&c,1);
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_DISP_CHR,(unsigned char*)&c,1);
   return PBIO_SUCCESS;
 }
 
 pbio_error_t hub_display_text(const char* text, uint32_t on, uint32_t off)
 {
   // Max 256 char for text
-  char data[4+4+256];
+  unsigned char data[4+4+256];
   int len = strlen(text);
-  strncpy(data+RP_HUB_DISP_TXT_INDEX_TXT,text,256);
+  strncpy((char*)data+RP_HUB_DISP_TXT_INDEX_TXT,text,256);
   // Force null terminate
   data[sizeof(data)-1] = 0;
 
@@ -105,9 +106,9 @@ pbio_error_t hub_display_text(const char* text, uint32_t on, uint32_t off)
 pbio_error_t hub_display_text_scroll(const char* text, uint32_t delay)
 {
   // Max 256 char for text
-  char data[4+256];
+  unsigned char data[4+256];
   int len = strlen(text);
-  strncpy(data+RP_HUB_DISP_TXT_SCR_INDEX_TXT,text,256);
+  strncpy((char*)data+RP_HUB_DISP_TXT_SCR_INDEX_TXT,text,256);
   // Force null terminate even if text is over 256 char
   data[sizeof(data)-1] = 0;
 
@@ -151,14 +152,14 @@ float hub_imu_get_temperature(void)
 /* Light */
 pbio_error_t hub_light_on_hsv(const pbio_color_hsv_t *hsv)
 {
-  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_LGT_ON_HSV,(char*)hsv,sizeof(*hsv));
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_LGT_ON_HSV,(unsigned char*)hsv,sizeof(*hsv));
 
   return PBIO_SUCCESS;
 }
 
 pbio_error_t hub_light_on_color(pbio_color_t color)
 {
-  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_LGT_ON_COL,(char*)&color,sizeof(color));
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_LGT_ON_COL,(unsigned char*)&color,sizeof(color));
 
   return PBIO_SUCCESS;
 }
@@ -172,12 +173,12 @@ pbio_error_t hub_light_off(void)
 
 void hub_speaker_set_volume(uint8_t volume)
 {
-  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_SPK_SET_VOL,(char*)&volume,sizeof(volume));
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_SPK_SET_VOL,(unsigned char*)&volume,sizeof(volume));
 }
 
 void hub_speaker_play_tone(uint16_t frequency, int32_t duration)
 {
-  char data[6];
+  unsigned char data[6];
   // *(int32_t*)(data+RP_HUB_SPK_PLY_TON_INDEX_DUR) = duration;
   /* always use MANUAL_STOP */
   *(int32_t*)(data+RP_HUB_SPK_PLY_TON_INDEX_DUR) = SOUND_MANUAL_STOP;

@@ -102,7 +102,7 @@ void light_test(void)
 void speaker_test(void)
 {
   hub_speaker_set_volume(50);
-  hub_speaker_play_tone(NOTE_C5,2000);
+  hub_speaker_play_tone((uint16_t)NOTE_C5,2000);
   hub_speaker_play_tone(NOTE_A5,SOUND_MANUAL_STOP);
   sleep(3);
   hub_speaker_stop();

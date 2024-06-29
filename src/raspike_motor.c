@@ -64,11 +64,10 @@ pbio_error_t pup_motor_set_speed(pup_motor_t *motor, int speed)
   RasPikePort port = pdev->port_id;
   char cmd = RP_CMD_ID_MOT_SPD;
   pdev->cmd = cmd;
-  raspike_prot_send(port,cmd,(char*)&speed,sizeof(speed));
+  raspike_prot_send(port,cmd,(unsigned char*)&speed,sizeof(speed));
 
   // Do not wait ack for performance
-  return 0;
-
+return PBIO_SUCCESS;
 }
 
 int32_t pup_motor_get_power(pup_motor_t *motor)
@@ -93,7 +92,7 @@ pbio_error_t pup_motor_set_power(pup_motor_t *motor, int power)
   // save as local value 
   pdev->power = power;
   
-  raspike_prot_send(port,cmd,(char*)&power,sizeof(power));
+  raspike_prot_send(port,cmd,(unsigned char*)&power,sizeof(power));
 
   // Do not wait ack for performance
   return 0;

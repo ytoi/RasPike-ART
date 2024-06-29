@@ -20,8 +20,8 @@ extern "C" {
   ENSURE_VALID_PORT(r_port); \
   RPPortDevice *dev = getDevice(r_port);   \
   if ( dev->device.device_type != 0 ) {    \
-    printf("Port %d is already initialized as %d\n", \
-	   dev->device.device_type); \
+    printf("Port %c is already initialized as %d\n", \
+	   port,dev->device.device_type); \
     return 0; \
   } \
   /* MAKE_CMD(type,0) means config*/ \
@@ -65,7 +65,7 @@ extern "C" {
   ENSURE_VALID_DEVICE(pdev); \
   RasPikePort port = pdev->port_id;		\
   char cmd = wait_cmd; \
-  raspike_prot_send(port,cmd,(char*)data,size);	\
+  raspike_prot_send(port,cmd,(unsigned char*)data,size);	\
   int ret = raspike_wait_ack(port,cmd); \
   return (ret_type)ret;
 

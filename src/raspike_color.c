@@ -48,7 +48,7 @@ pbio_error_t pup_color_sensor_light_set(pup_device_t *pdev,
   RasPikePort port = pdev->port_id;
   int32_t data[3] = { bv1,bv2,bv3};
 
-  raspike_prot_send(port,RP_CMD_ID_COL_LIGHT_SET,(char*)data,sizeof(data));
+  raspike_prot_send(port,RP_CMD_ID_COL_LIGHT_SET,(unsigned char*)data,sizeof(data));
 
   return (pbio_error_t)raspike_wait_ack(port,RP_CMD_ID_COL_LIGHT_SET);
 }
@@ -58,7 +58,7 @@ pbio_error_t pup_color_sensor_light_on(pup_device_t *pdev)
   ENSURE_VALID_DEVICE(pdev); 
   RasPikePort port = pdev->port_id;
   raspike_prot_send(port,RP_CMD_ID_COL_LIGHT_ON,0,0);
-
+  return PBIO_SUCCESS;
 }
 
 pbio_error_t pup_color_sensor_light_off(pup_device_t *pdev)
@@ -66,7 +66,7 @@ pbio_error_t pup_color_sensor_light_off(pup_device_t *pdev)
   ENSURE_VALID_DEVICE(pdev); 
   RasPikePort port = pdev->port_id;
   raspike_prot_send(port,RP_CMD_ID_COL_LIGHT_OFF,0,0);
-
+  return PBIO_SUCCESS;
 }
 
 /* TODO: RasPike Limitation size must be less than 3 */

@@ -37,8 +37,8 @@ pbio_error_t pup_ultrasonic_sensor_light_set(pup_device_t *pdev,
 
   ENSURE_VALID_DEVICE(pdev);
   RasPikePort port = pdev->port_id;	  
-  char cmd = RP_CMD_ID_US_LGT_SET;
-  raspike_prot_send(port,cmd,(char*)data,sizeof(data));
+  unsigned char cmd = RP_CMD_ID_US_LGT_SET;
+  raspike_prot_send(port,cmd,(unsigned char*)data,sizeof(data));
 
   return 0; // always returns OK
   
@@ -48,7 +48,7 @@ pbio_error_t pup_ultrasonic_sensor_light_on(pup_device_t *pdev)
 {
   ENSURE_VALID_DEVICE(pdev);
   RasPikePort port = pdev->port_id;	  
-  char cmd = RP_CMD_ID_US_LGT_ON;
+  unsigned char cmd = RP_CMD_ID_US_LGT_ON;
   raspike_prot_send(port,cmd,0,0);
   
   return 0; // always returns OK
@@ -58,7 +58,7 @@ pbio_error_t pup_ultrasonic_sensor_light_off(pup_device_t *pdev)
 {
   ENSURE_VALID_DEVICE(pdev);
   RasPikePort port = pdev->port_id;	  
-  char cmd = RP_CMD_ID_US_LGT_OFF;
+  unsigned char cmd = RP_CMD_ID_US_LGT_OFF;
   raspike_prot_send(port,cmd,0,0);
   
   return 0; // always returns OK

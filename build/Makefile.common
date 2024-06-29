@@ -22,9 +22,12 @@ INCLUDES := -I $(BASE_DIR)/drivers/include \
 	-I $(INC_DIR)
 
 clean:
-	rm -f *~ *.o *.so *.a $(APP_NAME) $(CLEAN_TARGETS)
+	rm -f *~ *.o *.so *.a $(APP_NAME) $(LIB_DIR)/$(LIB_NAME) $(CLEAN_TARGETS)
 
-
+ifneq ($(COMPILE_LIB),'1')
+$(LIB_DIR)/$(LIB_NAME):
+	(cd ../obj-libraspike-art;make) 
+endif
 
 $(OBJ_DIR)/%.o:$(SRC_DIR)/%.c
 	gcc $(OPT) -c $(INCLUDES) $(CFLAGS) -o $@ $<
