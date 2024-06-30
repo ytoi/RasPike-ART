@@ -115,6 +115,7 @@ RasPike-ARTでは上記のAPIは一部を除いて対応しています。
 
 非対応API
 - pup_color_sensor_detectable_colors(そのうち対応予定)
+- Bluetooth API
 
 対応しているが、呼ぶとSPIKE-RT側で死んでしまうもの（呼ばないよう注意)
 - pup_ultrasonic_sensor_light_set
