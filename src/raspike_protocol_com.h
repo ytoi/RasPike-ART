@@ -176,6 +176,8 @@
 #define RASPIKE_PORT_DATA_SIZE (12)
 
 
+typedef unsigned char RasPikePort;
+
 
 typedef struct {
     RasPikePort port;
@@ -198,27 +200,6 @@ extern RPProtocolSpikeStatus *raspike_prot_get_saved_status(void);
 
 #define RP_PROTOCOL_BUFMAX (256)
 
-
-// Command Parameters
-typedef struct {
-  char direction;
-  char reset_count;
-} RPProtocolParamMotorSetup;
-
-// For set_speed,set_power
-typedef struct {
-  int val;
-} RPProtocolParamMotorValue;
-
-
-
-// Status parameters
-// Motor
-typedef struct {
-  int32_t count;
-  int32_t speed;
-  int32_t power;
-} RPProtocolStatusParamMotor;
 
 
 #endif // _RASPIKE_PROTOCOL_H
