@@ -44,6 +44,35 @@ cd RasPike-ART/spike
 spike_env_setup_linux.sh
 ```
 
+### シリアルのデバイス設定
+
+このセットアップの中で、/etc/udev/rules.d/99-serial.rules を作成し、SPIKEのシリアルのデバイスを「USB_SPIKE」としてシンボリックリンクを作成して、固定するようにしています。
+もし、SPIKEを繋いで
+
+```
+ls /dev/USB_SPIKE
+```
+が表示されない場合、こちらで確認した情報と異なるIDとなっている可能性があります。
+
+```
+lsusb
+```
+として、USBの情報を参照してみて下さい。確認した環境では
+```
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 040: ID 0483:5740 STMicroelectronics Virtual COM Port
+Bus 001 Device 002: ID 2109:3431 VIA Labs, Inc. Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+```
+
+となっており、「STMicroelectronics Virtual COM Port」の情報を使って、/etc/udev/rules.d/99-serial.rules を作成しています。
+
+/etc/udev/rules.d/99-serial.rules
+```
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0483",ATTRS{idProduct}=="5740", SYMLINK+="USB_SPIKE",MODE="0666"
+```
+もし、IDなどが異なる場合は、ご自身の使用しているSPIKEに合わせて変更してください（同じであることを信じていますが）
+
 ちなみに、spike_env_setup_mac.shもありますが、macでの動作はまだできていません。
 RasPike-ARTの下にtooolsができているはずです。
 このセットアップはSPIKEにプログラムを送るためのものです。[SPIKE-RTの環境構築](https://github.com/spike-rt/spike-rt/blob/main/docs/ja/Env.md)のSPIKEへの書き込みのところを参考にしています。
