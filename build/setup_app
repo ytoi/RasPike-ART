@@ -1,0 +1,8 @@
+APP_NAME=$1
+BUILD_DIR=obj-${APP_NAME}
+mkdir ${BUILD_DIR}
+MAKEFILE=${BUILD_DIR}/Makefile
+touch ${MAKEFILE}
+echo "include ../../sample/${APP_NAME}/Makefile.inc" >> ${MAKEFILE}
+echo "include ../Makefile.common" >> ${MAKEFILE}
+echo "SETUP ${APP_NAME} Finished!"
