@@ -5,6 +5,7 @@
 #include "raspike_internal.h"
 #include "motor.h"
 
+
 DECLARE_DEVICE_TYPE_IN_FILE(RP_CMD_TYPE_MOTOR)
 
 pup_motor_t *pup_motor_get_device(pbio_port_id_t port)
@@ -136,7 +137,6 @@ static int32_t _pup_motor_restore_duty_limit(pup_motor_t *motor, int old_value)
   struct _pup_device_t *pdev = (struct _pup_device_t*)motor;
   WAITACK_AND_RET_COMMON_WITH_DATA(int32_t,RP_CMD_ID_MOT_RST_DTY,&old_value,sizeof(old_value));
 }
-
 
 void pup_motor_restore_duty_limit(pup_motor_t *motor, int old_value)
 {
