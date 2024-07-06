@@ -7,6 +7,8 @@
 #define RP_CMD_INIT  (0xAE)
 #define RP_CMD_START (0xEA)
 
+#define RP_CMD_INIT_MAGIC (0xCE)
+
 #define GET_CMD_TYPE(cmd) ((cmd)>>5)
 #define GET_CMD_INDEX(cmd) ((cmd)&0x1f)
 #define MAKE_CMD(type,id) ((type)<<5 | id)
