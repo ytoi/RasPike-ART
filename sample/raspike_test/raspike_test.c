@@ -32,7 +32,7 @@ void *receiver_task(void *arg)
 void ultrasonicsensor_test(void)
 {
   // Ultrasonic sensor test
-  pup_device_t *us = pup_ultrasonic_sensor_get_device(PBIO_PORT_ID_B);
+  pup_device_t *us = pup_ultrasonic_sensor_get_device(PBIO_PORT_ID_F);
   sleep(1);
 
   pup_ultrasonic_sensor_light_set(us,100,0,0,0);
@@ -59,7 +59,7 @@ void ultrasonicsensor_test(void)
 
 void motor_test(void)
 {
-  pup_motor_t *mot1 = pup_motor_get_device(PBIO_PORT_ID_F);  
+  pup_motor_t *mot1 = pup_motor_get_device(PBIO_PORT_ID_A);  
   pbio_error_t err= pup_motor_setup(mot1,PUP_DIRECTION_CLOCKWISE,true);
   int i = 50;
   while ( i < 100 ) {
@@ -116,7 +116,7 @@ void speaker_test(void)
 void colorsensor_test(void)
 {
   int i = 0;
-  pup_device_t *col = pup_color_sensor_get_device(PBIO_PORT_ID_F);
+  pup_device_t *col = pup_color_sensor_get_device(PBIO_PORT_ID_C);
 
   while ( i < 100 ) {
 

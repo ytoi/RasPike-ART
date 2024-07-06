@@ -100,6 +100,9 @@ RPPortDevice *getDevice(RasPikePort port)
 static int did_handshake = 0;
 static int stop_communication = 0;
 
+static unsigned char version_major = 0;
+static unsigned char version_minor = 0;
+static unsigned char version_patch = 0;
 
 int raspike_prot_init(RPComDescriptor *desc)
 {
@@ -117,19 +120,44 @@ int raspike_prot_init(RPComDescriptor *desc)
 
   // Hand Shake
   unsigned char cmd = RP_CMD_INIT;
-  unsigned char buf[1];
-  raspike_com_send(fgDesc,&cmd,1);
-
+  unsigned char buf[4];
+  int len;
+  
+  buf[0] = cmd;
+  buf[1] = RP_CMD_INIT_MAGIC; // Magic word
+  raspike_com_send(fgDesc,buf,2);
+  
+  
   // skip until INIT
   while(1) {
-    int len = raspike_com_receive(fgDesc,buf,1);
+    len = raspike_com_receive(fgDesc,buf,1);
     if ( buf[0] == RP_CMD_INIT ) {
-      did_handshake = 1;
-      break;
+      //      printf("Got Init \n");
+      len = raspike_com_receive(fgDesc,buf,1);
+      if ( buf[0] == RP_CMD_INIT_MAGIC ) {
+	//	printf("Got Init magic\n");
+	did_handshake = 1;
+	break;
+      }
     }
     // TODO: Retry send and check Timeout 
   }
-  printf("Handshake Success!\n");
+
+  len = raspike_com_receive(fgDesc,buf,3);  
+  version_major = buf[0];
+  version_minor = buf[1];  
+  version_patch = buf[2];  
+
+  printf("SPIKE asp.bin version=%d.%d.%d expected=%d.%d.%d\n", version_major,version_minor,version_patch,
+	 SPIKE_EXPECTED_VERSION_MAJOR,SPIKE_EXPECTED_VERSION_MINOR,SPIKE_EXPECTED_VERSION_PATCH);
+
+  if ( version_major != SPIKE_EXPECTED_VERSION_MAJOR ||
+       version_minor != SPIKE_EXPECTED_VERSION_MINOR ||
+       version_patch != SPIKE_EXPECTED_VERSION_PATCH ) {
+    printf("SPIKE version mismatched! update asp.bin\n");
+    return -1;
+  }
+	   
   
   return 0;
 }
