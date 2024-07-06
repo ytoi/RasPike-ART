@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "raspike_protocol_api.h"
+#include "raspike_protocol_com.h"
 #include "raspike_internal.h"
 
 #define printf(...) do { printf(__VA_ARGS__);fflush(stdout);}while(0)
@@ -100,18 +101,14 @@ static int did_handshake = 0;
 static int stop_communication = 0;
 
 
-int raspike_prot_init(RPComDescriptor *desc,RPProtocolSpikeStatus *status)
+int raspike_prot_init(RPComDescriptor *desc)
 {
   if ( desc == 0 || fgDesc) {
     return -1;
   }
   fgDesc = desc;
   
-  if ( status ) {
-    fgStatus = status;
-  } else {
-    fgStatus = malloc(sizeof(*status));
-  }
+  fgStatus = malloc(sizeof(*fgStatus));
 
   for (int i=0; i < sizeof(gPortDevices)/sizeof(gPortDevices[0]); i++ ) {
     init_port_device(gPortDevices+i);

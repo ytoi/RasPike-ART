@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "raspike_protocol_api.h"
+#include "raspike_protocol_com.h"
 #include "raspike_internal.h"
 #include "colorsensor.h"
 

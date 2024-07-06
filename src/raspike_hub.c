@@ -4,6 +4,7 @@
 #include <errno.h>
 #include "color.h"
 #include "raspike_protocol_api.h"
+#include "raspike_protocol_com.h"
 #include "raspike_internal.h"
 #include "error.h"
 #include "button.h"

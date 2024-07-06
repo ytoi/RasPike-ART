@@ -143,7 +143,7 @@ int main(int argc,char const *argv[])
     exit(-1);
   }
 
-  raspike_prot_init(desc,0);
+  raspike_prot_init(desc);
 
   pthread_t receive_thread;
   pthread_create(&receive_thread,0,receiver_task,0);
