@@ -137,7 +137,6 @@ static int32_t _pup_motor_restore_duty_limit(pup_motor_t *motor, int old_value)
   WAITACK_AND_RET_COMMON_WITH_DATA(int32_t,RP_CMD_ID_MOT_RST_DTY,&old_value,sizeof(old_value));
 }
 
-
 void pup_motor_restore_duty_limit(pup_motor_t *motor, int old_value)
 {
   _pup_motor_restore_duty_limit(motor, old_value);
