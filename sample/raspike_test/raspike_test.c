@@ -20,7 +20,7 @@
 #include "spike/hub/battery.h"
 
 
-#define RASPIKE_COM_NAME "/dev/ttyACM0"
+#define RASPIKE_COM_NAME "/dev/USB_SPIKE"
 
 void *receiver_task(void *arg)
 {
