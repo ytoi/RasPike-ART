@@ -5,6 +5,7 @@
 #include "raspike_internal.h"
 #include "motor.h"
 
+
 DECLARE_DEVICE_TYPE_IN_FILE(RP_CMD_TYPE_MOTOR)
 
 pup_motor_t *pup_motor_get_device(pbio_port_id_t port)
