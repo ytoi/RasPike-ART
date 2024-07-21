@@ -62,6 +62,20 @@ void motor_test(void)
   pup_motor_t *mot1 = pup_motor_get_device(PBIO_PORT_ID_A);  
   pbio_error_t err= pup_motor_setup(mot1,PUP_DIRECTION_CLOCKWISE,true);
   int i = 50;
+
+  pup_motor_set_speed(mot1,400);
+  sleep(1);
+  pup_motor_stop(mot1);
+  sleep(1);
+  pup_motor_set_speed(mot1,-400);
+  sleep(1);
+  pup_motor_brake(mot1);
+  sleep(1);
+  pup_motor_set_speed(mot1,400);  
+  sleep(1);
+  pup_motor_hold(mot1);
+  sleep(1);
+  
   while ( i < 100 ) {
     pup_motor_set_speed(mot1,i+400);
     printf("mot1:power=%d speed=%d count=%d isStall=%d\n",
@@ -154,8 +168,8 @@ int main(int argc,char const *argv[])
   //display_test();
   // light_test();
   //  speaker_test();
-  //  motor_test();
-  colorsensor_test();
+    motor_test();
+  //colorsensor_test();
   
   return 0;
 }
