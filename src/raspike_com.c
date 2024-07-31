@@ -11,7 +11,8 @@
 #include <time.h>
 #include <sys/time.h>
 #include <stdint.h>
-
+#include <linux/serial.h>
+#include <sys/ioctl.h>
 #include "raspike_com.h"
 #define printf(...) do { printf(__VA_ARGS__);fflush(stdout);}while(0)
 
@@ -51,8 +52,19 @@ static int rp_usb_send(RPComDescriptor *desc, const unsigned char *buf, int size
 
   int len;
   do {
+    /* for mesuring
+       struct timespec prev = {0};
+       struct timespec cur;
+    
+       clock_gettime(CLOCK_MONOTONIC,&prev);
+    */
     len = write(fd,buf,size);
-    //len = fwrite(buf,size,1,fp);
+
+    /*
+      clock_gettime(CLOCK_MONOTONIC,&cur);
+      int diff = (cur.tv_sec-prev.tv_sec)*1000+(cur.tv_nsec-prev.tv_nsec)/1000000;
+      printf("Send spends=%d size=%d\n",diff,size);
+    */
     if ( len >=0 || errno != EAGAIN || errno != EINTR ){
       break;
     }

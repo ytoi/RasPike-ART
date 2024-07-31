@@ -179,15 +179,22 @@ RPProtocolSpikeStatus *raspike_prot_get_saved_status(void)
 
 int raspike_prot_send(RasPikePort port, unsigned char cmdid, const unsigned char *buf, int size)
 {
-  unsigned char cmd[4];
+  unsigned char cmd[128];
   cmd[0] = RP_CMD_START;
   cmd[1] = cmdid;
   cmd[2] = size;
   cmd[3] = port;
 
+  int len = 4;
+  
+  if ( size > 0 ) {
+    memcpy(cmd+4,buf,size);
+    len += size;
+  }
+  
   // Ensure message is packed
   raspike_mutex_lock(&fgSendMutex);
-  
+  /*
   int len = raspike_com_send(fgDesc,cmd,sizeof(cmd));
   if ( len == 4 ) {
     if ( size > 0 ) {
@@ -196,6 +203,8 @@ int raspike_prot_send(RasPikePort port, unsigned char cmdid, const unsigned char
   } else {
     len = -1;
   }
+  */
+  raspike_com_send(fgDesc,cmd,len);
   raspike_com_flush(fgDesc);
   raspike_mutex_unlock(&fgSendMutex);
 

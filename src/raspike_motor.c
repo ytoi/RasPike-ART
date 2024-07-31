@@ -85,6 +85,8 @@ int32_t pup_motor_get_power(pup_motor_t *motor)
   GET_AND_RET_SENSOR_COMMON(int16_t,RP_MOTOR_INDEX_POWER);
 }
 
+#include <time.h>
+
 pbio_error_t pup_motor_set_power(pup_motor_t *motor, int power)
 {
   struct _pup_device_t *pdev = (struct _pup_device_t*)motor;
@@ -93,9 +95,22 @@ pbio_error_t pup_motor_set_power(pup_motor_t *motor, int power)
   pdev->cmd = cmd;
   // save as local value 
   pdev->power = power;
+
+  /* For mesuring 
+  struct timespec prev = {0};
+  struct timespec cur;
+
+  clock_gettime(CLOCK_MONOTONIC,&prev);
+  */
   
   raspike_prot_send(port,cmd,(unsigned char*)&power,sizeof(power));
-
+  //raspike_prot_send(port,cmd,(unsigned char*)buf,sizeof(buf));
+  /*
+  clock_gettime(CLOCK_MONOTONIC,&cur);
+  int diff = (cur.tv_sec-prev.tv_sec)*1000+(cur.tv_nsec-prev.tv_nsec)/1000000;
+  printf("Motor setspeed spends=%d\n",diff);
+  */
+  
   // Do not wait ack for performance
   return 0;
 }
