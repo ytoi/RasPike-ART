@@ -96,20 +96,21 @@ pbio_error_t pup_motor_set_power(pup_motor_t *motor, int power)
   // save as local value 
   pdev->power = power;
 
-  /* For mesuring 
+#define DO_MESURING 0
+#if DO_MEASURING == 1  
   struct timespec prev = {0};
   struct timespec cur;
 
   clock_gettime(CLOCK_MONOTONIC,&prev);
-  */
+#endif
   
   raspike_prot_send(port,cmd,(unsigned char*)&power,sizeof(power));
   //raspike_prot_send(port,cmd,(unsigned char*)buf,sizeof(buf));
-  /*
+#if DO_MEASURING == 1  
   clock_gettime(CLOCK_MONOTONIC,&cur);
   int diff = (cur.tv_sec-prev.tv_sec)*1000+(cur.tv_nsec-prev.tv_nsec)/1000000;
   printf("Motor setspeed spends=%d\n",diff);
-  */
+#endif
   
   // Do not wait ack for performance
   return 0;

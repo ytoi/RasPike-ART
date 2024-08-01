@@ -60,9 +60,20 @@ void ultrasonicsensor_test(void)
 void motor_test(void)
 {
   pup_motor_t *mot1 = pup_motor_get_device(PBIO_PORT_ID_A);  
+  pup_motor_t *mot2 = pup_motor_get_device(PBIO_PORT_ID_E);
+  pup_motor_t *mot3 = pup_motor_get_device(PBIO_PORT_ID_B);  
   pbio_error_t err= pup_motor_setup(mot1,PUP_DIRECTION_CLOCKWISE,true);
+  err= pup_motor_setup(mot2,PUP_DIRECTION_CLOCKWISE,true);
+  err= pup_motor_setup(mot3,PUP_DIRECTION_CLOCKWISE,true);
   int i = 50;
 
+  while ( 1 ) {
+    int power = i%50+30;
+    pup_motor_set_power(mot1,power);
+    pup_motor_set_power(mot2,power);    
+    pup_motor_set_power(mot3,power);  
+    usleep(10*1000);
+  }
   pup_motor_set_speed(mot1,400);
   sleep(1);
   pup_motor_stop(mot1);

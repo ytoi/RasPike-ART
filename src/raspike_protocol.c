@@ -158,6 +158,8 @@ int raspike_prot_init(RPComDescriptor *desc)
     return -1;
   }
 	   
+  raspike_usb_set_mode(RASPIKE_USB_MODE_BUFFERED);
+
   
   return 0;
 }
@@ -205,7 +207,7 @@ int raspike_prot_send(RasPikePort port, unsigned char cmdid, const unsigned char
   }
   */
   raspike_com_send(fgDesc,cmd,len);
-  raspike_com_flush(fgDesc);
+  //  raspike_com_flush(fgDesc);
   raspike_mutex_unlock(&fgSendMutex);
 
   return len;
@@ -311,6 +313,9 @@ int raspike_prot_receive(void)
     count=0;
   }
 #endif  
+
+  // Send Buffered commands
+  raspike_com_flush(fgDesc);
   
   return process_command(port,cmd,buf,size);
 

@@ -14,6 +14,7 @@
 #include <linux/serial.h>
 #include <sys/ioctl.h>
 #include "raspike_com.h"
+#include <pthread.h>
 #define printf(...) do { printf(__VA_ARGS__);fflush(stdout);}while(0)
 
 typedef int (*RPComSendFunc)(RPComDescriptor *desc, const unsigned char *buf, int size);
@@ -46,6 +47,65 @@ static int get_usb_fd(RPComDescriptor *desc)
   exit(-1);
 }
 
+/* Buffered write */
+static char fg_send_buffer[1024];
+static int current_index = 0;
+static pthread_mutex_t fg_send_mutex = PTHREAD_MUTEX_INITIALIZER;
+static int fg_send_mode = RASPIKE_USB_MODE_NORMAL;
+
+void raspike_usb_buffer_flush(RPComDescriptor *desc)
+{
+  pthread_mutex_lock(&fg_send_mutex);
+  int len;
+  if ( fg_send_mode == RASPIKE_USB_MODE_BUFFERED ) {
+    /* for mesuring */
+#define DO_MEASURING 0
+#if DO_MEASURING == 1
+    static struct timespec prev = {0};
+    struct timespec cur,cur2;
+
+    clock_gettime(CLOCK_MONOTONIC,&cur);
+#endif
+    
+    len = write(get_usb_fd(desc),fg_send_buffer,current_index);
+
+#if DO_MEASURING == 1    
+    clock_gettime(CLOCK_MONOTONIC,&cur2);
+    int cur_time = cur.tv_sec*1000+cur.tv_nsec/1000000;
+    int diff = (cur.tv_sec-prev.tv_sec)*1000+(cur.tv_nsec-prev.tv_nsec)/1000000;
+    int write_diff =  (cur2.tv_sec-cur.tv_sec)*1000+(cur2.tv_nsec-cur.tv_nsec)/1000000;
+
+    prev = cur;
+    printf("Flush time=%d write_diff=%d diff=%d\n",cur_time,write_diff,diff);
+#endif    
+    current_index = 0;
+  }
+  pthread_mutex_unlock(&fg_send_mutex);
+}  
+extern void raspike_usb_set_mode(int mode)
+{
+  fg_send_mode = mode;
+}
+
+static int buffered_write(int fd, const char *buf, size_t size)
+{
+  pthread_mutex_lock(&fg_send_mutex);
+  if ( current_index + size > sizeof(fg_send_buffer) ) {
+    printf("Send Buffer Over! size=%d current_index=%d\n", size,current_index);
+    errno = ENOMEM;
+    pthread_mutex_unlock(&fg_send_mutex);
+    return -1;
+  }
+
+  memcpy(fg_send_buffer+current_index,buf,size);
+  current_index+=size;
+
+  pthread_mutex_unlock(&fg_send_mutex);
+  return size; // success
+}
+
+
+  /* this function is not thread safe. calling this function in serial is application's responsibirity */
 static int rp_usb_send(RPComDescriptor *desc, const unsigned char *buf, int size)
 {
   int fd = get_usb_fd(desc);
@@ -58,7 +118,11 @@ static int rp_usb_send(RPComDescriptor *desc, const unsigned char *buf, int size
     
        clock_gettime(CLOCK_MONOTONIC,&prev);
     */
-    len = write(fd,buf,size);
+    if ( fg_send_mode == RASPIKE_USB_MODE_BUFFERED ) {
+      len = buffered_write(fd,buf,size);
+    } else {
+      len = write(fd,buf,size);
+    } 
 
     /*
       clock_gettime(CLOCK_MONOTONIC,&cur);
@@ -212,5 +276,9 @@ int raspike_com_close(RPComDescriptor *desc)
 
 int raspike_com_flush(RPComDescriptor *desc)
 {
-  return desc->flush(desc);
+  if ( fg_send_mode == RASPIKE_USB_MODE_NORMAL ) {
+    return desc->flush(desc);
+  } else {
+    raspike_usb_buffer_flush(desc);
+  }
 }
