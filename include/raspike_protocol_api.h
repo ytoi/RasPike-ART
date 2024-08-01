@@ -10,7 +10,6 @@ extern "C" {
   extern int raspike_prot_init(RPComDescriptor *desc);
   extern int raspike_prot_receive(void);
   extern int raspike_prot_shutdown(void);
-
   
 #ifdef __cplusplus
 }
