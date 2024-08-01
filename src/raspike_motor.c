@@ -96,7 +96,7 @@ pbio_error_t pup_motor_set_power(pup_motor_t *motor, int power)
   // save as local value 
   pdev->power = power;
 
-#define DO_MESURING 0
+#define DO_MEASURING 0
 #if DO_MEASURING == 1  
   struct timespec prev = {0};
   struct timespec cur;

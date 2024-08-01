@@ -155,7 +155,7 @@ int raspike_prot_init(RPComDescriptor *desc)
        version_minor != SPIKE_EXPECTED_VERSION_MINOR ||
        version_patch != SPIKE_EXPECTED_VERSION_PATCH ) {
     printf("SPIKE version mismatched! update asp.bin\n");
-    return -1;
+    exit(-1);
   }
 	   
   raspike_usb_set_mode(RASPIKE_USB_MODE_BUFFERED);
@@ -234,7 +234,7 @@ static int process_command(RasPikePort port, unsigned char cmd, unsigned char *b
       dev->ack_cmd = *p;
       dev->ack_data = *(p+1);
       // signal to the waiting task
-      printf("Ack Received cmd=%d data=%d\n",dev->ack_cmd,dev->ack_data);
+      printf("Ack Received port=%d cmd=%d data=%d\n",port,dev->ack_cmd,dev->ack_data);
       raspike_cond_signal(&dev->cond);
       raspike_mutex_unlock(&dev->mutex);
     }
