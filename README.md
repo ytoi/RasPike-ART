@@ -12,6 +12,13 @@ RasPike-ARTはLEGO® Education SPIKE™ PrimeとRaspberryPiをUSBで接続して
 - EV3RT（ASP3)とは独立しているので、通常のLinuxプログラムで使用することができます
 
 
+# 更新状況
+
+| SPIKE ver | date | 更新内容 |
+| --------- | ---- | ------ |
+| 0.0.6 | 2024.8.23 | 超音波センサーを初期化するとSPIKE側の周期が遅くなる問題(#10)に対応しました。これにともない、pup_ultrasonic_sensor_presence()は非サポートのAPIとなりました（必要な方がいたらお知らせください） |
+
+
 # 構成
 
 RaspberryPiのUSB（ホスト）とSPIKEのUSB(デバイス）をUSBケーブルで繋ぎます。
@@ -144,6 +151,7 @@ RasPike-ARTでは上記のAPIは一部を除いて対応しています。
 
 非対応API
 - pup_color_sensor_detectable_colors(そのうち対応予定)
+- pup_ultrasonic_sensor_presence()  2024/8/23のバージョンから非対応となりました。
 - Bluetooth API
 
 対応しているが、呼ぶとSPIKE-RT側で死んでしまうもの（呼ばないよう注意)
@@ -153,6 +161,7 @@ RasPike-ARTでは上記のAPIは一部を除いて対応しています。
 
 また、注意事項として、モーターについては
 　pup_motor_get_device()でポートに関連づけたあと、pup_motor_setup()をしてからpup_motor_set_power()などを呼ぶようにしないと、SPIKE-RT側で死んでしまうようです。
+ pup_motor_setup()を同じモーターに対して複数回行うと、これも死んでしまう様です。
 
 この辺りのエラーチェックはそのうち改善します。
 
