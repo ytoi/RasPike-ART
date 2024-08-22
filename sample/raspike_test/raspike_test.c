@@ -35,9 +35,9 @@ void ultrasonicsensor_test(void)
   pup_device_t *us = pup_ultrasonic_sensor_get_device(PBIO_PORT_ID_F);
   sleep(1);
 
-  pup_ultrasonic_sensor_light_set(us,100,0,0,0);
 #if 0
   // 超音波センサーのライトを点けるとハングするので、コメントアウトする
+  pup_ultrasonic_sensor_light_set(us,100,0,0,0);
   sleep(1);
   pup_ultrasonic_sensor_light_set(us,0,50,0,0);
   sleep(1);
@@ -174,12 +174,12 @@ int main(int argc,char const *argv[])
   pthread_create(&receive_thread,0,receiver_task,0);
 
 
-  //  ultrasonic_sensor_test();
-  //  motor_test();
+  //ultrasonicsensor_test();
+    motor_test();
   //display_test();
   // light_test();
   //  speaker_test();
-    motor_test();
+  //    motor_test();
   //colorsensor_test();
   
   return 0;
