@@ -32,5 +32,5 @@ bool pup_force_sensor_pressed(pup_device_t *pdev, float force)
 
 bool pup_force_sensor_touched(pup_device_t *pdev)
 {
-  GET_AND_RET_SENSOR_COMMON(bool,RP_FORCESENSOR_INDEX_DST);
+  GET_AND_RET_SENSOR_COMMON(bool,RP_FORCESENSOR_INDEX_TCH);
 }
